@@ -2,27 +2,30 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Atividade 01: Desafio dos 10 Níveis</title>
+    <title>Avaliação de Lógica: Atividade 01</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .app-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); width: 100%; max-width: 800px; text-align: center; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .score-box { background: #ffeb3b; padding: 10px 20px; border-radius: 10px; font-weight: bold; font-size: 1.2em; }
-        .level-badge { background: #2196f3; color: white; padding: 5px 15px; border-radius: 5px; }
+        .score-box { background: #e3f2fd; padding: 10px 20px; border-radius: 10px; font-weight: bold; font-size: 1.2em; border: 2px solid #2196f3; }
+        .level-badge { background: #333; color: white; padding: 5px 15px; border-radius: 5px; }
         
-        .mission-text { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 1.1em; color: #1565c0; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .mission-text { background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 1.1em; color: #856404; min-height: 60px; border-left: 5px solid #ffc107; display: flex; align-items: center; justify-content: center; }
         
         .list-visual { display: flex; justify-content: center; gap: 12px; margin: 40px 0; padding: 25px; background: #f8f9fa; border-radius: 10px; border: 2px dashed #cbd5e0; min-height: 100px; flex-wrap: wrap; }
-        .node { position: relative; width: 65px; height: 85px; background: #4a90e2; color: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: bold; font-size: 1.3em; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .index-label { position: absolute; top: -28px; color: #718096; font-size: 0.75em; font-weight: normal; }
+        .node { position: relative; width: 65px; height: 85px; background: #4a90e2; color: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: bold; font-size: 1.3em; transition: 0.3s; }
+        .index-label { position: absolute; top: -28px; color: #718096; font-size: 0.75em; font-weight: bold; }
         
-        .controls { display: flex; gap: 10px; justify-content: center; align-items: center; background: #fff; padding: 15px; border-radius: 10px; }
+        .controls { display: flex; gap: 10px; justify-content: center; align-items: center; padding: 15px; }
         select, button { padding: 12px; font-size: 1em; border-radius: 6px; border: 1px solid #cbd5e0; }
-        button { background: #4caf50; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        button:hover { background: #388e3c; transform: scale(1.05); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
         
-        #feedback { margin-top: 20px; font-weight: bold; min-height: 24px; }
+        button { background: #2196f3; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #1976d2; }
+        button:disabled { background: #ccc !important; cursor: not-allowed; }
+        
+        #feedback { margin-top: 20px; font-weight: bold; min-height: 24px; padding: 10px; border-radius: 5px; }
+        .correct { background: #d4edda; color: #155724; }
+        .wrong { background: #f8d7da; color: #721c24; }
         .win-screen { display: none; padding: 40px; }
     </style>
 </head>
@@ -30,44 +33,42 @@
 
 <div class="app-container" id="game-ui">
     <div class="header">
-        <div class="level-badge">Nível <span id="level-num">1</span> de 10</div>
-        <div class="score-box">Pontos: <span id="pts">0</span> / 10</div>
+        <div class="level-badge">Desafio <span id="level-num">1</span> de 10</div>
+        <div class="score-box">Nota Final: <span id="pts">0</span> / 10</div>
     </div>
 
-    <div class="mission-text" id="mission">
-        </div>
-
-    
+    <div class="mission-text" id="mission"></div>
 
     <div class="list-visual" id="listDisplay"></div>
 
     <div class="controls">
-        <span id="action-label">Inserir na posição:</span>
+        <span id="action-label" style="font-weight: bold;">Índice:</span>
         <select id="posSelect"></select>
-        <button id="btnAction" onclick="checkAnswer()">Confirmar Ação</button>
+        <button id="btnAction" onclick="checkAnswer()">Confirmar Resposta (1 única chance)</button>
     </div>
     
     <div id="feedback"></div>
 </div>
 
 <div class="app-container win-screen" id="win-ui">
-    <h1 style="color: #4caf50;">🏆 MISSÃO CUMPRIDA!</h1>
-    <p style="font-size: 1.2em;">Você completou todos os 10 desafios de lógica de listas!</p>
-    <button onclick="location.reload()" style="background: #2196f3;">Jogar Novamente</button>
+    <h1>📊 Avaliação Finalizada</h1>
+    <p style="font-size: 1.5em;">Sua pontuação foi: <strong id="final-score" style="color: #2196f3;">0</strong> de 10</p>
+    <p id="evaluation-text"></p>
+    <button onclick="location.reload()" style="background: #333;">Reiniciar Teste</button>
 </div>
 
 <script>
     const challenges = [
-        { list: [1, 2, 4, 5], val: 3, target: 2, type: 'add', msg: "O número <b>3</b> fugiu! Onde ele deve entrar para manter a ordem?" },
-        { list: [10, 20, 30, 50], val: 40, target: 3, type: 'add', msg: "Coloque o <b>40</b> no índice correto." },
-        { list: [5, 10, 99, 15], val: 99, target: 2, type: 'rem', msg: "CUIDADO! O <b>99</b> é um intruso. Qual o índice dele para removermos?" },
-        { list: [2, 4, 6, 8], val: 0, target: 0, type: 'add', msg: "O número <b>0</b> quer ser o primeiro da lista. Qual é o índice inicial?" },
-        { list: [1, 3, 5, 7, 8], val: 8, target: 4, type: 'rem', msg: "A lista deve ter apenas ímpares. Remova o <b>8</b>." },
-        { list: ['A', 'B', 'D', 'E'], val: 'C', target: 2, type: 'add', msg: "Falta a letra <b>C</b> na sequência alfabética. Onde inseri-la?" },
-        { list: [100, 200, 300, 500, 600], val: 400, target: 3, type: 'add', msg: "Insira o <b>400</b> na posição correta." },
-        { list: [1, 2, 3, 4, 100], val: 100, target: 4, type: 'rem', msg: "O <b>100</b> está sobrando. Qual o índice dele?" },
-        { list: [5, 6, 8, 9, 10], val: 7, target: 2, type: 'add', msg: "O <b>7</b> precisa entrar na lista. Qual a posição?" },
-        { list: [0, 1, 2, 3, 4, 5, 10], val: 10, target: 6, type: 'rem', msg: "Último desafio: Remova o <b>10</b> para a lista terminar no 5." }
+        { list: [1, 2, 4, 5], val: 3, target: 2, type: 'add', msg: "Para manter a ordem, em qual índice deve entrar o <b>3</b>?" },
+        { list: [10, 20, 30, 50], val: 40, target: 3, type: 'add', msg: "Aonde o <b>40</b> deve ser inserido?" },
+        { list: [5, 10, 99, 15], val: 99, target: 2, type: 'rem', msg: "Remova o intruso <b>99</b>. Qual é o seu índice?" },
+        { list: [2, 4, 6, 8], val: 0, target: 0, type: 'add', msg: "O <b>0</b> deve ser inserido em qual posição inicial?" },
+        { list: [1, 3, 5, 7, 8], val: 8, target: 4, type: 'rem', msg: "Qual o índice do número par <b>8</b> para remoção?" },
+        { list: ['A', 'B', 'D', 'E'], val: 'C', target: 2, type: 'add', msg: "Insira a letra <b>C</b> na posição correta." },
+        { list: [100, 200, 300, 500, 600], val: 400, target: 3, type: 'add', msg: "Onde o <b>400</b> se encaixa?" },
+        { list: [1, 2, 3, 4, 100], val: 100, target: 4, type: 'rem', msg: "Remova o <b>100</b> informando seu índice." },
+        { list: [5, 6, 8, 9, 10], val: 7, target: 2, type: 'add', msg: "Qual o índice correto para o <b>7</b>?" },
+        { list: [0, 1, 2, 3, 4, 5, 10], val: 10, target: 6, type: 'rem', msg: "Último: Qual o índice do <b>10</b> para removê-lo?" }
     ];
 
     let currentLevel = 0;
@@ -75,55 +76,72 @@
 
     function initLevel() {
         const c = challenges[currentLevel];
+        const sel = document.getElementById('posSelect');
+        const fb = document.getElementById('feedback');
+        
         document.getElementById('level-num').innerText = currentLevel + 1;
         document.getElementById('mission').innerHTML = c.msg;
-        document.getElementById('action-label').innerText = c.type === 'add' ? "Inserir na posição:" : "Remover do índice:";
+        document.getElementById('action-label').innerText = c.type === 'add' ? "Índice de Inserção:" : "Índice de Remoção:";
         
-        // Render List
-        const display = document.getElementById('listDisplay');
-        display.innerHTML = '';
-        c.list.forEach((v, i) => {
-            display.innerHTML += `<div class="node"><span class="index-label">índice ${i}</span>${v}</div>`;
-        });
+        renderList(c.list);
 
-        // Setup Select
-        const sel = document.getElementById('posSelect');
         sel.innerHTML = '<option value="">?</option>';
         const max = c.type === 'add' ? c.list.length + 1 : c.list.length;
         for(let i=0; i < max; i++) {
             sel.innerHTML += `<option value="${i}">${i}</option>`;
         }
-        document.getElementById('feedback').innerText = "";
+        fb.innerText = "";
+        fb.className = "";
+        document.getElementById('btnAction').disabled = false;
+    }
+
+    function renderList(arr) {
+        const display = document.getElementById('listDisplay');
+        display.innerHTML = '';
+        arr.forEach((v, i) => {
+            display.innerHTML += `<div class="node"><span class="index-label">índice ${i}</span>${v}</div>`;
+        });
     }
 
     function checkAnswer() {
         const c = challenges[currentLevel];
-        const userVal = document.getElementById('posSelect').value;
+        const sel = document.getElementById('posSelect');
+        const userVal = sel.value;
         const fb = document.getElementById('feedback');
 
         if(userVal === "") return;
 
+        document.getElementById('btnAction').disabled = true;
+
         if(parseInt(userVal) === c.target) {
             score++;
             document.getElementById('pts').innerText = score;
-            fb.innerHTML = "✅ Excelente! Você analisou corretamente.";
-            fb.style.color = "green";
-            document.getElementById('btnAction').disabled = true;
-
-            setTimeout(() => {
-                currentLevel++;
-                if(currentLevel < challenges.length) {
-                    document.getElementById('btnAction').disabled = false;
-                    initLevel();
-                } else {
-                    document.getElementById('game-ui').style.display = 'none';
-                    document.getElementById('win-ui').style.display = 'block';
-                }
-            }, 1500);
+            fb.innerHTML = "✅ RESPOSTA CORRETA!";
+            fb.className = "correct";
         } else {
-            fb.innerHTML = "❌ Posição errada. Observe os índices acima dos números!";
-            fb.style.color = "red";
+            fb.innerHTML = `❌ RESPOSTA ERRADA! O índice correto era <b>${c.target}</b>.`;
+            fb.className = "wrong";
         }
+
+        setTimeout(() => {
+            currentLevel++;
+            if(currentLevel < challenges.length) {
+                initLevel();
+            } else {
+                finishEvaluation();
+            }
+        }, 2000);
+    }
+
+    function finishEvaluation() {
+        document.getElementById('game-ui').style.display = 'none';
+        document.getElementById('win-ui').style.display = 'block';
+        document.getElementById('final-score').innerText = score;
+        
+        const evalTxt = document.getElementById('evaluation-text');
+        if(score >= 8) evalTxt.innerText = "Excelente! Você dominou a lógica de listas.";
+        else if(score >= 5) evalTxt.innerText = "Bom trabalho, mas revise a contagem de índices.";
+        else evalTxt.innerText = "Precisa praticar mais a identificação de posições em listas.";
     }
 
     initLevel();
